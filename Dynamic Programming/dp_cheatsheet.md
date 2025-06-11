@@ -197,15 +197,20 @@ function knapsack01(weights, values, capacity) {
     const n = weights.length;
     const dp = Array(n+1).fill().map(() => Array(capacity+1).fill(0));
     
-    for (let i = 1; i <= n; i++) {
-        for (let w = 1; w <= capacity; w++) {
-            if (weights[i-1] <= w) {
+    for (let i = 1; i <= n; i++) { // Current item is at index i-1 in values/weights
+        const currentWeight = weights[i - 1];
+        const currentValue = values[i - 1];
+        for (let w = 0; w <= capacity; w++) { // Current capacity
+            if (currentWeight <= w) {
+                // Option 1: Include the current item (i-1)
+                // Option 2: Exclude the current item (i-1)
                 dp[i][w] = Math.max(
-                    dp[i-1][w], // Don't take
-                    dp[i-1][w-weights[i-1]] + values[i-1] // Take
+                    dp[i - 1][w],                            // Excluded
+                    currentValue + dp[i - 1][w - currentWeight] // Included
                 );
             } else {
-                dp[i][w] = dp[i-1][w];
+                // Cannot include the current item as its weight > w
+                dp[i][w] = dp[i - 1][w];
             }
         }
     }
