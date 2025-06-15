@@ -348,328 +348,6 @@ class LRUCache {
 }
 ```
 
-## 10. Edge Cases & Common Pitfalls
-
-### Critical Edge Cases Always Test
-```javascript
-// Edge case handler template
-function handleEdgeCases(head) {
-    // 1. Empty list
-    if (!head) return null;
-    
-    // 2. Single node
-    if (!head.next) {
-        // Handle single node case
-        return head;
-    }
-    
-    // 3. Two nodes
-    if (!head.next.next) {
-        // Handle two node case
-        return head;
-    }
-    
-    // Normal case logic here
-}
-
-// Common edge cases checklist:
-const edgeCases = [
-    "null/empty list",
-    "single node",
-    "two nodes",
-    "all nodes same value",
-    "already sorted/reversed",
-    "cycle present",
-    "very large list",
-    "negative values",
-    "duplicate values"
-];
-```
-
-### Memory Management & Common Mistakes
-```javascript
-// ❌ Common Mistakes
-function commonMistakes() {
-    // 1. Not handling null pointers
-    // if (head.next) // Wrong! head could be null
-    
-    // 2. Losing reference to head
-    // head = head.next; // Lost original head!
-    
-    // 3. Infinite loops in circular lists
-    // while (current.next) // Will loop forever in circular list
-    
-    // 4. Not updating size counter
-    // Forgetting to increment/decrement size
-    
-    // 5. Memory leaks in deletion
-    // Not setting deleted node pointers to null
-}
-
-// ✅ Best Practices
-function bestPractices() {
-    // 1. Always check for null
-    if (!head || !head.next) return head;
-    
-    // 2. Use dummy nodes for head changes
-    let dummy = new ListNode(0);
-    dummy.next = head;
-    
-    // 3. Track previous node for deletions
-    let prev = dummy, current = head;
-    
-    // 4. Clean up deleted nodes
-    let nodeToDelete = current;
-    prev.next = current.next;
-    nodeToDelete.next = null; // Clean reference
-    
-    // 5. Use two-pointer technique for optimization
-    let slow = head, fast = head;
-}
-```
-
-## 11. Testing & Debugging Utilities
-
-### Debug Helper Functions
-```javascript
-// Print list with cycle detection
-function printList(head, maxNodes = 20) {
-    let result = [];
-    let current = head;
-    let visited = new Set();
-    let count = 0;
-    
-    while (current && count < maxNodes) {
-        if (visited.has(current)) {
-            result.push(`-> CYCLE at ${current.val}`);
-            break;
-        }
-        
-        visited.add(current);
-        result.push(current.val);
-        current = current.next;
-        count++;
-    }
-    
-    if (count >= maxNodes && current) {
-        result.push('... (truncated)');
-    }
-    
-    console.log(result.join(' -> '));
-    return result;
-}
-
-// Create list from array
-function createListFromArray(arr) {
-    if (!arr || arr.length === 0) return null;
-    
-    let head = new ListNode(arr[0]);
-    let current = head;
-    
-    for (let i = 1; i < arr.length; i++) {
-        current.next = new ListNode(arr[i]);
-        current = current.next;
-    }
-    
-    return head;
-}
-
-// Convert list to array
-function listToArray(head) {
-    let result = [];
-    let current = head;
-    let visited = new Set();
-    
-    while (current && !visited.has(current)) {
-        visited.add(current);
-        result.push(current.val);
-        current = current.next;
-    }
-    
-    return result;
-}
-
-// Create cycle for testing
-function createCycle(head, cyclePos) {
-    if (!head || cyclePos < 0) return head;
-    
-    let current = head;
-    let cycleNode = null;
-    let tail = null;
-    let index = 0;
-    
-    while (current) {
-        if (index === cyclePos) {
-            cycleNode = current;
-        }
-        if (!current.next) {
-            tail = current;
-        }
-        current = current.next;
-        index++;
-    }
-    
-    if (tail && cycleNode) {
-        tail.next = cycleNode;
-    }
-    
-    return head;
-}
-
-// Validate list integrity
-function validateList(head) {
-    let issues = [];
-    let current = head;
-    let visited = new Set();
-    let count = 0;
-    
-    while (current && count < 10000) {
-        if (visited.has(current)) {
-            issues.push(`Cycle detected at node ${current.val}`);
-            break;
-        }
-        
-        visited.add(current);
-        
-        // Check for invalid references
-        if (current.next === current) {
-            issues.push(`Self-reference at node ${current.val}`);
-        }
-        
-        current = current.next;
-        count++;
-    }
-    
-    if (count >= 10000) {
-        issues.push('Possible infinite loop or very large list');
-    }
-    
-    return {
-        isValid: issues.length === 0,
-        issues: issues,
-        nodeCount: visited.size
-    };
-}
-```
-
-### Performance Testing
-```javascript
-// Benchmark linked list operations
-function benchmarkOperations() {
-    const sizes = [1000, 10000, 100000];
-    
-    sizes.forEach(size => {
-        console.log(`\n--- Testing with ${size} nodes ---`);
-        
-        // Create test list
-        let arr = Array.from({length: size}, (_, i) => i);
-        let head = createListFromArray(arr);
-        
-        // Test traversal
-        console.time(`Traversal ${size}`);
-        let count = 0;
-        let current = head;
-        while (current) {
-            count++;
-            current = current.next;
-        }
-        console.timeEnd(`Traversal ${size}`);
-        
-        // Test search
-        console.time(`Search ${size}`);
-        let searchValue = Math.floor(size / 2);
-        let found = false;
-        current = head;
-        while (current) {
-            if (current.val === searchValue) {
-                found = true;
-                break;
-            }
-            current = current.next;
-        }
-        console.timeEnd(`Search ${size}`);
-        
-        // Test reversal
-        console.time(`Reverse ${size}`);
-        head = reverseList(head);
-        console.timeEnd(`Reverse ${size}`);
-    });
-}
-```
-
-## 12. Interview Tips & Strategies
-
-### Problem-Solving Approach
-1. **Clarify Requirements**
-   - Ask about edge cases (empty list, single node)
-   - Confirm input/output format
-   - Check for cycles, duplicates, constraints
-
-2. **Choose Right Data Structure**
-   - Singly: Simple operations, memory efficient
-   - Doubly: Need backward traversal, frequent deletions
-   - Circular: Round-robin, Josephus problems
-
-3. **Common Patterns Recognition**
-   - Two pointers → Middle, cycle, nth from end
-   - Dummy node → Head modifications
-   - Stack → Reverse, parentheses matching
-   - Hash map → Fast lookups, cycle detection
-
-4. **Optimization Strategy**
-   - Single pass vs multiple passes
-   - Space-time tradeoffs
-   - In-place vs extra space
-
-### Code Template Structure
-```javascript
-function solveLinkedListProblem(head) {
-    // 1. Handle edge cases
-    if (!head) return null;
-    if (!head.next) return head; // Single node
-    
-    // 2. Initialize variables
-    let dummy = new ListNode(0);
-    dummy.next = head;
-    let slow = head, fast = head;
-    let prev = dummy;
-    
-    // 3. Main algorithm
-    while (/* condition */) {
-        // Core logic
-    }
-    
-    // 4. Clean up and return
-    return dummy.next;
-}
-```
-
-### Time Complexity Quick Reference
-- **O(1)**: Insert/delete at known position with reference
-- **O(n)**: Traversal, search, most single-pass algorithms
-- **O(n log n)**: Merge sort, divide & conquer approaches
-- **O(n²)**: Nested loops, bubble sort, naive approaches
-
-### Space Complexity Patterns
-- **O(1)**: Two pointers, iterative approaches
-- **O(n)**: Hash maps, recursion stack, copying structures
-- **O(log n)**: Divide & conquer recursion
-
-This comprehensive cheat sheet covers every aspect of linked lists you'll encounter in coding interviews and real-world applications. Practice these patterns and you'll master linked list problems!
-    }
-    return second; // kth from end
-}
-
-// 3. Meeting point technique
-function findMeetingPoint(head1, head2) {
-    let a = head1, b = head2;
-    while (a !== b) {
-        a = a ? a.next : head2;
-        b = b ? b.next : head1;
-    }
-    return a; // intersection point
-}
-```
 
 ### Dummy Node Patterns
 ```javascript
@@ -702,6 +380,17 @@ function partition(head, x) {
     large.next = null;
     small.next = largeDummy.next;
     return smallDummy.next;
+}
+
+
+// 3. Meeting point technique
+function findMeetingPoint(head1, head2) {
+    let a = head1, b = head2;
+    while (a !== b) {
+        a = a ? a.next : head2;
+        b = b ? b.next : head1;
+    }
+    return a; // intersection point
 }
 ```
 
@@ -2577,3 +2266,312 @@ class BucketNode {
 - **Merge sort**: Divide and conquer
 - **Quick sort**: Partition-based
 - **Heap sort**: Priority queue based
+
+## 10. Edge Cases & Common Pitfalls
+
+### Critical Edge Cases Always Test
+```javascript
+// Edge case handler template
+function handleEdgeCases(head) {
+    // 1. Empty list
+    if (!head) return null;
+    
+    // 2. Single node
+    if (!head.next) {
+        // Handle single node case
+        return head;
+    }
+    
+    // 3. Two nodes
+    if (!head.next.next) {
+        // Handle two node case
+        return head;
+    }
+    
+    // Normal case logic here
+}
+
+// Common edge cases checklist:
+const edgeCases = [
+    "null/empty list",
+    "single node",
+    "two nodes",
+    "all nodes same value",
+    "already sorted/reversed",
+    "cycle present",
+    "very large list",
+    "negative values",
+    "duplicate values"
+];
+```
+
+### Memory Management & Common Mistakes
+```javascript
+// ❌ Common Mistakes
+function commonMistakes() {
+    // 1. Not handling null pointers
+    // if (head.next) // Wrong! head could be null
+    
+    // 2. Losing reference to head
+    // head = head.next; // Lost original head!
+    
+    // 3. Infinite loops in circular lists
+    // while (current.next) // Will loop forever in circular list
+    
+    // 4. Not updating size counter
+    // Forgetting to increment/decrement size
+    
+    // 5. Memory leaks in deletion
+    // Not setting deleted node pointers to null
+}
+
+// ✅ Best Practices
+function bestPractices() {
+    // 1. Always check for null
+    if (!head || !head.next) return head;
+    
+    // 2. Use dummy nodes for head changes
+    let dummy = new ListNode(0);
+    dummy.next = head;
+    
+    // 3. Track previous node for deletions
+    let prev = dummy, current = head;
+    
+    // 4. Clean up deleted nodes
+    let nodeToDelete = current;
+    prev.next = current.next;
+    nodeToDelete.next = null; // Clean reference
+    
+    // 5. Use two-pointer technique for optimization
+    let slow = head, fast = head;
+}
+```
+
+## 11. Testing & Debugging Utilities
+
+### Debug Helper Functions
+```javascript
+// Print list with cycle detection
+function printList(head, maxNodes = 20) {
+    let result = [];
+    let current = head;
+    let visited = new Set();
+    let count = 0;
+    
+    while (current && count < maxNodes) {
+        if (visited.has(current)) {
+            result.push(`-> CYCLE at ${current.val}`);
+            break;
+        }
+        
+        visited.add(current);
+        result.push(current.val);
+        current = current.next;
+        count++;
+    }
+    
+    if (count >= maxNodes && current) {
+        result.push('... (truncated)');
+    }
+    
+    console.log(result.join(' -> '));
+    return result;
+}
+
+// Create list from array
+function createListFromArray(arr) {
+    if (!arr || arr.length === 0) return null;
+    
+    let head = new ListNode(arr[0]);
+    let current = head;
+    
+    for (let i = 1; i < arr.length; i++) {
+        current.next = new ListNode(arr[i]);
+        current = current.next;
+    }
+    
+    return head;
+}
+
+// Convert list to array
+function listToArray(head) {
+    let result = [];
+    let current = head;
+    let visited = new Set();
+    
+    while (current && !visited.has(current)) {
+        visited.add(current);
+        result.push(current.val);
+        current = current.next;
+    }
+    
+    return result;
+}
+
+// Create cycle for testing
+function createCycle(head, cyclePos) {
+    if (!head || cyclePos < 0) return head;
+    
+    let current = head;
+    let cycleNode = null;
+    let tail = null;
+    let index = 0;
+    
+    while (current) {
+        if (index === cyclePos) {
+            cycleNode = current;
+        }
+        if (!current.next) {
+            tail = current;
+        }
+        current = current.next;
+        index++;
+    }
+    
+    if (tail && cycleNode) {
+        tail.next = cycleNode;
+    }
+    
+    return head;
+}
+
+// Validate list integrity
+function validateList(head) {
+    let issues = [];
+    let current = head;
+    let visited = new Set();
+    let count = 0;
+    
+    while (current && count < 10000) {
+        if (visited.has(current)) {
+            issues.push(`Cycle detected at node ${current.val}`);
+            break;
+        }
+        
+        visited.add(current);
+        
+        // Check for invalid references
+        if (current.next === current) {
+            issues.push(`Self-reference at node ${current.val}`);
+        }
+        
+        current = current.next;
+        count++;
+    }
+    
+    if (count >= 10000) {
+        issues.push('Possible infinite loop or very large list');
+    }
+    
+    return {
+        isValid: issues.length === 0,
+        issues: issues,
+        nodeCount: visited.size
+    };
+}
+```
+
+### Performance Testing
+```javascript
+// Benchmark linked list operations
+function benchmarkOperations() {
+    const sizes = [1000, 10000, 100000];
+    
+    sizes.forEach(size => {
+        console.log(`\n--- Testing with ${size} nodes ---`);
+        
+        // Create test list
+        let arr = Array.from({length: size}, (_, i) => i);
+        let head = createListFromArray(arr);
+        
+        // Test traversal
+        console.time(`Traversal ${size}`);
+        let count = 0;
+        let current = head;
+        while (current) {
+            count++;
+            current = current.next;
+        }
+        console.timeEnd(`Traversal ${size}`);
+        
+        // Test search
+        console.time(`Search ${size}`);
+        let searchValue = Math.floor(size / 2);
+        let found = false;
+        current = head;
+        while (current) {
+            if (current.val === searchValue) {
+                found = true;
+                break;
+            }
+            current = current.next;
+        }
+        console.timeEnd(`Search ${size}`);
+        
+        // Test reversal
+        console.time(`Reverse ${size}`);
+        head = reverseList(head);
+        console.timeEnd(`Reverse ${size}`);
+    });
+}
+```
+
+## 12. Interview Tips & Strategies
+
+### Problem-Solving Approach
+1. **Clarify Requirements**
+   - Ask about edge cases (empty list, single node)
+   - Confirm input/output format
+   - Check for cycles, duplicates, constraints
+
+2. **Choose Right Data Structure**
+   - Singly: Simple operations, memory efficient
+   - Doubly: Need backward traversal, frequent deletions
+   - Circular: Round-robin, Josephus problems
+
+3. **Common Patterns Recognition**
+   - Two pointers → Middle, cycle, nth from end
+   - Dummy node → Head modifications
+   - Stack → Reverse, parentheses matching
+   - Hash map → Fast lookups, cycle detection
+
+4. **Optimization Strategy**
+   - Single pass vs multiple passes
+   - Space-time tradeoffs
+   - In-place vs extra space
+
+### Code Template Structure
+```javascript
+function solveLinkedListProblem(head) {
+    // 1. Handle edge cases
+    if (!head) return null;
+    if (!head.next) return head; // Single node
+    
+    // 2. Initialize variables
+    let dummy = new ListNode(0);
+    dummy.next = head;
+    let slow = head, fast = head;
+    let prev = dummy;
+    
+    // 3. Main algorithm
+    while (/* condition */) {
+        // Core logic
+    }
+    
+    // 4. Clean up and return
+    return dummy.next;
+}
+```
+
+### Time Complexity Quick Reference
+- **O(1)**: Insert/delete at known position with reference
+- **O(n)**: Traversal, search, most single-pass algorithms
+- **O(n log n)**: Merge sort, divide & conquer approaches
+- **O(n²)**: Nested loops, bubble sort, naive approaches
+
+### Space Complexity Patterns
+- **O(1)**: Two pointers, iterative approaches
+- **O(n)**: Hash maps, recursion stack, copying structures
+- **O(log n)**: Divide & conquer recursion
+
+This comprehensive cheat sheet covers every aspect of linked lists you'll encounter in coding interviews and real-world applications. Practice these patterns and you'll master linked list problems!
