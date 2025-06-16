@@ -7,13 +7,6 @@
 2. **Recursive Case**: Function calls itself with modified parameters
 3. **Progress**: Each call moves closer to base case
 
-## Core Structure
-```javascript
-function recurse(params) {
-    if (baseCase) return baseValue;  // Stop condition
-    return combine(process(params), recurse(nextParams)); // Self-call
-}
-```
 
 ## Basic Template
 
