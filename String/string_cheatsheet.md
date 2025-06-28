@@ -1022,3 +1022,88 @@ function findRepeatedDnaSequences(s) {
     return Array.from(result);
 }
 ```
+
+
+## Common String Algorithms
+
+### KMP (Pattern Matching)
+```javascript
+function strStr(haystack, needle) {
+    if (needle.length === 0) return 0;
+    
+    // Build LPS array
+    const lps = new Array(needle.length).fill(0);
+    let len = 0, i = 1;
+    
+    while (i < needle.length) {
+        if (needle[i] === needle[len]) {
+            lps[i] = ++len;
+            i++;
+        } else if (len > 0) {
+            len = lps[len - 1];
+        } else {
+            lps[i] = 0;
+            i++;
+        }
+    }
+    
+    // Search pattern
+    i = 0; // haystack index
+    let j = 0; // needle index
+    
+    while (i < haystack.length) {
+        if (haystack[i] === needle[j]) {
+            i++;
+            j++;
+        }
+        
+        if (j === needle.length) {
+            return i - j;
+        } else if (i < haystack.length && haystack[i] !== needle[j]) {
+            if (j > 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+    return -1;
+}
+```
+
+## Quick Reference Patterns
+
+| Problem Type | Pattern | Key Insight |
+|--------------|---------|-------------|
+| Palindrome | Two Pointers | Compare from both ends |
+| Anagram | Hash Map | Count character frequencies |
+| Substring | Sliding Window | Expand/contract window |
+| Parentheses | Stack | LIFO matching |
+| Pattern Search | KMP/Rolling Hash | Preprocessing for efficiency |
+| Longest Common | DP | Build table bottom-up |
+
+## Edge Cases to Remember
+- Empty strings (`""`)
+- Single character strings
+- All same characters (`"aaaa"`)
+- Case sensitivity
+- Special characters and spaces
+- Unicode characters
+- Very long strings (performance)
+
+## Time Complexities
+- Character access: O(1)
+- String concatenation: O(n) per operation
+- Array join: O(n)
+- indexOf/includes: O(n)
+- Two pointers: O(n)
+- Hash map operations: O(1) average
+- Sliding window: O(n)
+
+## Pro Tips
+1. Use arrays for frequent modifications, join at end
+2. Consider character codes for case-insensitive comparisons
+3. Use Set for O(1) lookups instead of indexOf
+4. Remember string immutability in JavaScript
+5. Use template literals for readable string building
+6. Consider regex for complex pattern matching
