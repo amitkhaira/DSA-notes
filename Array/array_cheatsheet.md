@@ -1,3 +1,194 @@
+# JavaScript Array Coding Interview Cheat Sheet
+
+## Common Array Methods
+
+### Basic Operations
+```js
+arr.length              // Get array length
+arr[i]                  // Access element at index i
+arr.push(x)             // Add to end - O(1)
+arr.pop()               // Remove from end - O(1)
+arr.unshift(x)          // Add to start - O(n)
+arr.shift()             // Remove from start - O(n)
+arr.splice(i, n, ...x)  // Remove n elements from index i, insert x
+```
+
+### Search & Find
+```js
+arr.indexOf(x)          // First index of x, -1 if not found
+arr.includes(x)         // Boolean check if x exists
+arr.find(fn)            // First element matching condition
+arr.findIndex(fn)       // Index of first element matching condition
+```
+
+### Transform & Filter
+```js
+arr.map(fn)             // Transform each element
+arr.filter(fn)          // Keep elements matching condition
+arr.reduce(fn, initial) // Reduce to single value
+arr.sort(compareFn)     // Sort in place
+arr.reverse()           // Reverse in place
+```
+
+## Key Patterns & Techniques
+
+### Two Pointers
+```js
+// Opposite direction
+let left = 0, right = arr.length - 1;
+while (left < right) {
+    // Process arr[left] and arr[right]
+    left++;
+    right--;
+}
+
+// Same direction (slow/fast)
+let slow = 0;
+for (let fast = 0; fast < arr.length; fast++) {
+    if (condition) {
+        arr[slow] = arr[fast];
+        slow++;
+    }
+}
+```
+
+### Sliding Window
+```js
+// Fixed size window
+let sum = 0;
+for (let i = 0; i < k; i++) sum += arr[i];
+let maxSum = sum;
+
+for (let i = k; i < arr.length; i++) {
+    sum = sum - arr[i - k] + arr[i];
+    maxSum = Math.max(maxSum, sum);
+}
+
+// Variable size window
+let left = 0, sum = 0;
+for (let right = 0; right < arr.length; right++) {
+    sum += arr[right];
+    while (sum > target) {
+        sum -= arr[left];
+        left++;
+    }
+    // Process current window [left, right]
+}
+```
+
+### Prefix Sum
+```js
+// Build prefix sum array
+const prefixSum = [0];
+for (let i = 0; i < arr.length; i++) {
+    prefixSum[i + 1] = prefixSum[i] + arr[i];
+}
+
+// Range sum query [i, j]
+const rangeSum = prefixSum[j + 1] - prefixSum[i];
+```
+
+### Hash Map for Frequency/Indices
+```js
+const map = new Map();
+for (let i = 0; i < arr.length; i++) {
+    if (map.has(target - arr[i])) {
+        return [map.get(target - arr[i]), i];
+    }
+    map.set(arr[i], i);
+}
+```
+
+## Common Problem Types
+
+### Searching
+```js
+// Binary Search
+let left = 0, right = arr.length - 1;
+while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+}
+return -1;
+```
+
+### Sorting Patterns
+```js
+// Custom comparator
+arr.sort((a, b) => a - b);        // Ascending numbers
+arr.sort((a, b) => b - a);        // Descending numbers
+arr.sort((a, b) => a.localeCompare(b)); // Strings
+
+// Sort by property
+arr.sort((a, b) => a.value - b.value);
+```
+
+### Remove Duplicates
+```js
+// In-place removal (sorted array)
+let j = 1;
+for (let i = 1; i < arr.length; i++) {
+    if (arr[i] !== arr[i-1]) {
+        arr[j] = arr[i];
+        j++;
+    }
+}
+return j; // new length
+
+// Using Set
+const unique = [...new Set(arr)];
+```
+
+### Array Rotation
+```js
+// Rotate right by k positions
+function rotate(arr, k) {
+    k = k % arr.length;
+    reverse(arr, 0, arr.length - 1);
+    reverse(arr, 0, k - 1);
+    reverse(arr, k, arr.length - 1);
+}
+
+function reverse(arr, start, end) {
+    while (start < end) {
+        [arr[start], arr[end]] = [arr[end], arr[start]];
+        start++;
+        end--;
+    }
+}
+```
+
+### Subarray Problems
+```js
+// Maximum subarray sum (Kadane's algorithm)
+let maxSum = arr[0], currentSum = arr[0];
+for (let i = 1; i < arr.length; i++) {
+    currentSum = Math.max(arr[i], currentSum + arr[i]);
+    maxSum = Math.max(maxSum, currentSum);
+}
+```
+
+## Utility Functions
+
+### Array Creation
+```js
+new Array(n).fill(0)              // Array of n zeros
+Array.from({length: n}, (_, i) => i) // [0, 1, 2, ..., n-1]
+Array.from({length: n}, () => [])    // Array of n empty arrays
+```
+
+### Common Checks
+```js
+// Check if array is sorted
+const isSorted = arr.every((val, i) => i === 0 || arr[i-1] <= val);
+
+// Check if all elements are unique
+const isUnique = arr.length === new Set(arr).size;
+```
+
+
 # Array Interview Questions by Difficulty Level
 
 ## Easy Level Questions
@@ -790,3 +981,16 @@ function lengthOfLIS(nums) {
 - Study advanced data structures (stacks, deques)
 - Practice divide and conquer approaches
 - Master space optimization techniques
+
+  
+## Time Complexities
+- Access: O(1)
+- Search: O(n) unsorted, O(log n) sorted with binary search
+- Insertion: O(1) at end, O(n) at beginning/middle
+- Deletion: O(1) at end, O(n) at beginning/middle
+- Sort: O(n log n)
+
+## Space Optimization Tips
+- Use two pointers to modify array in-place instead of creating new array
+- Use index mapping instead of additional data structures when possible
+- Consider using the array itself as a hash map for problems with limited range
