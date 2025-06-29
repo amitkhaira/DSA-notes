@@ -11,6 +11,8 @@ arr.pop()               // Remove from end - O(1)
 arr.unshift(x)          // Add to start - O(n)
 arr.shift()             // Remove from start - O(n)
 arr.splice(i, n, ...x)  // Remove n elements from index i, insert x
+arr.concat(arr2)        // Merge arrays (non-mutating)
+arr.at(i)               // Get item at index (supports negative index)
 ```
 
 ### Search & Find
@@ -19,6 +21,10 @@ arr.indexOf(x)          // First index of x, -1 if not found
 arr.includes(x)         // Boolean check if x exists
 arr.find(fn)            // First element matching condition
 arr.findIndex(fn)       // Index of first element matching condition
+arr.lastIndexOf(x)      // Last index of x
+arr.includes(x)         // Boolean: x exists?
+arr.some(fn)            // Is at least one element true?
+arr.every(fn)           // Are all elements true?
 ```
 
 ### Transform & Filter
@@ -28,6 +34,8 @@ arr.filter(fn)          // Keep elements matching condition
 arr.reduce(fn, initial) // Reduce to single value
 arr.sort(compareFn)     // Sort in place
 arr.reverse()           // Reverse in place
+arr.fill(value, start?, end?)  // Fill with value
+arr.copyWithin(target, start, end?)  // Copy part within array
 ```
 
 ## Key Patterns & Techniques
@@ -954,6 +962,11 @@ function lengthOfLIS(nums) {
 }
 // Time: O(n log n), Space: O(n)
 ```
+
+## ⚠️ Mutating vs Non-Mutating Methods
+
+- **Mutating:** `push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`, `fill`, `copyWithin`
+- **Non-Mutating:** `map`, `filter`, `reduce`, `slice`, `concat`, `flat`, `flatMap`
 
 ## Missing Pattern Categories Added
 
