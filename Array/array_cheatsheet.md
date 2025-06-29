@@ -193,7 +193,7 @@ const isUnique = arr.length === new Set(arr).size;
 
 ## Easy Level Questions
 
-### 1. Two Sum
+### 1. Two Sum ⭐⭐⭐⭐⭐
 **Problem**: Find two numbers in array that add up to target
 ```js
 function twoSum(nums, target) {
@@ -210,7 +210,7 @@ function twoSum(nums, target) {
 // Time: O(n), Space: O(n)
 ```
 
-### 2. Remove Duplicates from Sorted Array
+### 2. Remove Duplicates from Sorted Array ⭐⭐⭐⭐
 **Problem**: Remove duplicates in-place, return new length
 ```js
 function removeDuplicates(nums) {
@@ -227,7 +227,7 @@ function removeDuplicates(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 3. Best Time to Buy and Sell Stock
+### 3. Best Time to Buy and Sell Stock ⭐⭐⭐⭐⭐
 **Problem**: Find maximum profit from buying and selling stock once
 ```js
 function maxProfit(prices) {
@@ -245,7 +245,7 @@ function maxProfit(prices) {
 // Time: O(n), Space: O(1)
 ```
 
-### 4. Contains Duplicate
+### 4. Contains Duplicate ⭐⭐⭐⭐⭐
 **Problem**: Check if array contains any duplicate values
 ```js
 function containsDuplicate(nums) {
@@ -254,7 +254,7 @@ function containsDuplicate(nums) {
 // Time: O(n), Space: O(n)
 ```
 
-### 5. Maximum Subarray (Easy version)
+### 5. Maximum Subarray (Easy version) ⭐⭐⭐
 **Problem**: Find sum of contiguous subarray with largest sum
 ```js
 function maxSubArray(nums) {
@@ -269,7 +269,7 @@ function maxSubArray(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 6. Merge Sorted Array
+### 6. Merge Sorted Array ⭐⭐⭐⭐
 **Problem**: Merge two sorted arrays in-place
 ```js
 function merge(nums1, m, nums2, n) {
@@ -288,7 +288,7 @@ function merge(nums1, m, nums2, n) {
 // Time: O(m+n), Space: O(1)
 ```
 
-### 7. Plus One
+### 7. Plus One ⭐⭐⭐
 **Problem**: Add 1 to number represented as array of digits
 ```js
 function plusOne(digits) {
@@ -304,7 +304,7 @@ function plusOne(digits) {
 // Time: O(n), Space: O(1) amortized
 ```
 
-### 8. Move Zeroes
+### 8. Move Zeroes ⭐⭐⭐⭐
 **Problem**: Move all zeros to end while maintaining relative order
 ```js
 function moveZeroes(nums) {
@@ -322,7 +322,7 @@ function moveZeroes(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 9. Intersection of Two Arrays II
+### 9. Intersection of Two Arrays II ⭐⭐⭐
 **Problem**: Find intersection with frequency count
 ```js
 function intersect(nums1, nums2) {
@@ -344,7 +344,7 @@ function intersect(nums1, nums2) {
 // Time: O(m+n), Space: O(min(m,n))
 ```
 
-### 10. Valid Mountain Array
+### 10. Valid Mountain Array ⭐⭐
 **Problem**: Check if array forms a valid mountain
 ```js
 function validMountainArray(arr) {
@@ -373,7 +373,7 @@ function validMountainArray(arr) {
 
 ## Medium Level Questions
 
-### 1. 3Sum
+### 1. 3Sum ⭐⭐⭐⭐⭐
 **Problem**: Find all unique triplets that sum to zero
 ```js
 function threeSum(nums) {
@@ -404,7 +404,7 @@ function threeSum(nums) {
 // Time: O(n²), Space: O(1)
 ```
 
-### 2. Product of Array Except Self
+### 2. Product of Array Except Self ⭐⭐⭐⭐⭐
 **Problem**: Return array where each element is product of all other elements
 ```js
 function productExceptSelf(nums) {
@@ -428,7 +428,7 @@ function productExceptSelf(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 3. Container With Most Water
+### 3. Container With Most Water ⭐⭐⭐⭐⭐
 **Problem**: Find two lines that form container holding most water
 ```js
 function maxArea(height) {
@@ -451,7 +451,7 @@ function maxArea(height) {
 // Time: O(n), Space: O(1)
 ```
 
-### 4. Find All Duplicates in Array
+### 4. Find All Duplicates in Array ⭐⭐⭐
 **Problem**: Find all elements that appear twice (nums[i] in range [1,n])
 ```js
 function findDuplicates(nums) {
@@ -469,7 +469,7 @@ function findDuplicates(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 5. Subarray Sum Equals K
+### 5. Subarray Sum Equals K ⭐⭐⭐⭐
 **Problem**: Count number of subarrays with sum equal to k
 ```js
 function subarraySum(nums, k) {
@@ -489,7 +489,7 @@ function subarraySum(nums, k) {
 // Time: O(n), Space: O(n)
 ```
 
-### 6. Rotate Array
+### 6. Rotate Array ⭐⭐⭐⭐
 **Problem**: Rotate array to right by k steps
 ```js
 function rotate(nums, k) {
@@ -509,7 +509,7 @@ function reverse(nums, start, end) {
 // Time: O(n), Space: O(1)
 ```
 
-### 7. Set Matrix Zeroes
+### 7. Set Matrix Zeroes ⭐⭐⭐⭐
 **Problem**: Set entire row and column to zero if element is zero
 ```js
 function setZeroes(matrix) {
@@ -554,7 +554,7 @@ function setZeroes(matrix) {
 // Time: O(m×n), Space: O(1)
 ```
 
-### 8. Next Permutation
+### 8. Next Permutation ⭐⭐⭐
 **Problem**: Find lexicographically next greater permutation
 ```js
 function nextPermutation(nums) {
@@ -588,7 +588,7 @@ function reverse(nums, start, end) {
 // Time: O(n), Space: O(1)
 ```
 
-### 9. Find Peak Element
+### 9. Find Peak Element ⭐⭐⭐
 **Problem**: Find any peak element in O(log n) time
 ```js
 function findPeakElement(nums) {
@@ -607,7 +607,7 @@ function findPeakElement(nums) {
 // Time: O(log n), Space: O(1)
 ```
 
-### 10. Longest Consecutive Sequence
+### 10. Longest Consecutive Sequence ⭐⭐⭐⭐
 **Problem**: Find length of longest consecutive sequence
 ```js
 function longestConsecutive(nums) {
@@ -633,7 +633,7 @@ function longestConsecutive(nums) {
 // Time: O(n), Space: O(n)
 ```
 
-### 11. Minimum Window Substring (Array Pattern)
+### 11. Minimum Window Substring (Array Pattern) ⭐⭐
 **Problem**: Find minimum window containing all characters
 ```js
 function minWindow(s, t) {
@@ -686,7 +686,7 @@ function minWindow(s, t) {
 
 ## Hard Level Questions
 
-### 1. Trapping Rain Water
+### 1. Trapping Rain Water ⭐⭐⭐⭐⭐
 **Problem**: Calculate how much rain water can be trapped
 ```js
 function trap(height) {
@@ -718,7 +718,7 @@ function trap(height) {
 // Time: O(n), Space: O(1)
 ```
 
-### 2. First Missing Positive
+### 2. First Missing Positive ⭐⭐⭐⭐⭐
 **Problem**: Find smallest missing positive integer
 ```js
 function firstMissingPositive(nums) {
@@ -742,7 +742,7 @@ function firstMissingPositive(nums) {
 // Time: O(n), Space: O(1)
 ```
 
-### 3. Median of Two Sorted Arrays
+### 3. Median of Two Sorted Arrays ⭐⭐⭐⭐
 **Problem**: Find median of two sorted arrays in O(log(m+n))
 ```js
 function findMedianSortedArrays(nums1, nums2) {
@@ -779,7 +779,7 @@ function findMedianSortedArrays(nums1, nums2) {
 // Time: O(log(min(m,n))), Space: O(1)
 ```
 
-### 4. Largest Rectangle in Histogram
+### 4. Largest Rectangle in Histogram ⭐⭐⭐
 **Problem**: Find largest rectangle area in histogram
 ```js
 function largestRectangleArea(heights) {
@@ -801,7 +801,7 @@ function largestRectangleArea(heights) {
 // Time: O(n), Space: O(n)
 ```
 
-### 5. Sliding Window Maximum
+### 5. Sliding Window Maximum ⭐⭐⭐⭐
 **Problem**: Find maximum in each sliding window of size k
 ```js
 function maxSlidingWindow(nums, k) {
@@ -831,7 +831,7 @@ function maxSlidingWindow(nums, k) {
 // Time: O(n), Space: O(k)
 ```
 
-### 6. Maximum Gap
+### 6. Maximum Gap ⭐⭐
 **Problem**: Find maximum difference between successive elements in sorted form
 ```js
 function maximumGap(nums) {
@@ -870,7 +870,7 @@ function maximumGap(nums) {
 // Time: O(n), Space: O(n)
 ```
 
-### 7. Count of Smaller Numbers After Self
+### 7. Count of Smaller Numbers After Self ⭐⭐
 **Problem**: Count how many numbers after current are smaller
 ```js
 function countSmaller(nums) {
@@ -916,7 +916,7 @@ function countSmaller(nums) {
 // Time: O(n log n), Space: O(n)
 ```
 
-### 8. Russian Doll Envelopes
+### 8. Russian Doll Envelopes ⭐⭐⭐
 **Problem**: Maximum number of envelopes you can Russian doll
 ```js
 function maxEnvelopes(envelopes) {
