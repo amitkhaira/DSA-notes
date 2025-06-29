@@ -22,7 +22,6 @@ arr.includes(x)         // Boolean check if x exists
 arr.find(fn)            // First element matching condition
 arr.findIndex(fn)       // Index of first element matching condition
 arr.lastIndexOf(x)      // Last index of x
-arr.includes(x)         // Boolean: x exists?
 arr.some(fn)            // Is at least one element true?
 arr.every(fn)           // Are all elements true?
 ```
