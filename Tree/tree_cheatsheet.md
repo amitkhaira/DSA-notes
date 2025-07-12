@@ -101,6 +101,13 @@ function inorderIterative(root) {
 ### 6. Binary Tree Preorder Traversal ⭐⭐⭐
 **Problem**: Return preorder traversal of binary tree
 ```javascript
+// Recursive
+function preorder(root) {
+    if (!root) return [];
+    return [root.val, ...preorder(root.left), ...preorder(root.right)];
+}
+
+// Iterative
 function preorderTraversal(root) {
     if (!root) return [];
     const stack = [root], result = [];
