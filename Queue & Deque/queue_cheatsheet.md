@@ -1,4 +1,4 @@
-# Complete Queue & Deque Cheat Sheet (JavaScript)
+# Complete Queue & Deque Cheat Sheet (JavaScript) - Interview Edition
 
 ## 1. Queue Fundamentals
 
@@ -297,54 +297,65 @@ class PriorityQueue {
 }
 ```
 
-## 6. Common Coding Patterns & Problems
+---
 
-### 6.1 Breadth-First Search (BFS)
+# 📋 INTERVIEW QUESTIONS BY DIFFICULTY LEVEL
+
+## 🟢 Easy Level Questions
+
+### 1. Implement Queue using Array ⭐⭐⭐⭐⭐
+**Problem**: Implement a queue using JavaScript array with basic operations.
+
+**Solution**:
 ```js
-function bfs(graph, start) {
-    const queue = new Queue();
-    const visited = new Set();
-    const result = [];
-    
-    queue.enqueue(start);
-    visited.add(start);
-    
-    while (!queue.isEmpty()) {
-        const node = queue.dequeue();
-        result.push(node);
-        
-        for (let neighbor of graph[node] || []) {
-            if (!visited.has(neighbor)) {
-                visited.add(neighbor);
-                queue.enqueue(neighbor);
-            }
-        }
+class Queue {
+    constructor() {
+        this.items = [];
     }
     
-    return result;
+    enqueue(element) {
+        this.items.push(element);
+    }
+    
+    dequeue() {
+        return this.items.shift();
+    }
+    
+    front() {
+        return this.items[0];
+    }
+    
+    isEmpty() {
+        return this.items.length === 0;
+    }
+    
+    size() {
+        return this.items.length;
+    }
 }
 ```
 
-### 6.2 Level Order Tree Traversal
+### 2. Binary Tree Level Order Traversal ⭐⭐⭐⭐⭐
+**Problem**: Given a binary tree, return the level order traversal of its nodes' values.
+
+**Solution**:
 ```js
 function levelOrder(root) {
     if (!root) return [];
     
-    const queue = new Queue();
+    const queue = [root];
     const result = [];
     
-    queue.enqueue(root);
-    
-    while (!queue.isEmpty()) {
-        const levelSize = queue.size();
+    while (queue.length > 0) {
+        const levelSize = queue.length;
         const level = [];
         
         for (let i = 0; i < levelSize; i++) {
-            const node = queue.dequeue();
+            const node = queue.shift();
             level.push(node.val);
             
-            if (node.left) queue.enqueue(node.left);
-            if (node.right) queue.enqueue(node.right);
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
         }
         
         result.push(level);
@@ -354,28 +365,109 @@ function levelOrder(root) {
 }
 ```
 
-### 6.3 Sliding Window Maximum (Deque)
+### 3. Generate Binary Numbers ⭐⭐⭐⭐
+**Problem**: Generate binary numbers from 1 to n using a queue.
+
+**Solution**:
+```js
+function generateBinaryNumbers(n) {
+    const queue = ["1"];
+    const result = [];
+    
+    for (let i = 0; i < n; i++) {
+        const binary = queue.shift();
+        result.push(binary);
+        
+        queue.push(binary + "0");
+        queue.push(binary + "1");
+    }
+    
+    return result;
+}
+```
+
+### 4. Implement Stack using Queue ⭐⭐⭐⭐
+**Problem**: Implement a stack using only queue operations.
+
+**Solution**:
+```js
+class StackUsingQueue {
+    constructor() {
+        this.queue = [];
+    }
+    
+    push(element) {
+        this.queue.push(element);
+        
+        // Rotate queue to maintain stack order
+        for (let i = 0; i < this.queue.length - 1; i++) {
+            this.queue.push(this.queue.shift());
+        }
+    }
+    
+    pop() {
+        return this.queue.shift();
+    }
+    
+    top() {
+        return this.queue[0];
+    }
+    
+    empty() {
+        return this.queue.length === 0;
+    }
+}
+```
+
+### 5. Queue Reversal ⭐⭐⭐
+**Problem**: Reverse a queue using only queue operations.
+
+**Solution**:
+```js
+function reverseQueue(queue) {
+    const stack = [];
+    
+    // Transfer all elements to stack
+    while (!queue.isEmpty()) {
+        stack.push(queue.dequeue());
+    }
+    
+    // Transfer back to queue
+    while (stack.length > 0) {
+        queue.enqueue(stack.pop());
+    }
+    
+    return queue;
+}
+```
+
+## 🟡 Medium Level Questions
+
+### 1. Sliding Window Maximum ⭐⭐⭐⭐⭐
+**Problem**: Find maximum element in every sliding window of size k.
+
+**Solution**:
 ```js
 function maxSlidingWindow(nums, k) {
-    const deque = new Deque();
+    const deque = [];
     const result = [];
     
     for (let i = 0; i < nums.length; i++) {
         // Remove elements outside current window
-        while (!deque.isEmpty() && deque.peekFront() < i - k + 1) {
-            deque.removeFront();
+        while (deque.length > 0 && deque[0] < i - k + 1) {
+            deque.shift();
         }
         
         // Remove smaller elements from rear
-        while (!deque.isEmpty() && nums[deque.peekRear()] < nums[i]) {
-            deque.removeRear();
+        while (deque.length > 0 && nums[deque[deque.length - 1]] < nums[i]) {
+            deque.pop();
         }
         
-        deque.addRear(i);
+        deque.push(i);
         
         // Add maximum to result when window is complete
         if (i >= k - 1) {
-            result.push(nums[deque.peekFront()]);
+            result.push(nums[deque[0]]);
         }
     }
     
@@ -383,117 +475,318 @@ function maxSlidingWindow(nums, k) {
 }
 ```
 
-### 6.4 Generate Binary Numbers
-```js
-function generateBinaryNumbers(n) {
-    const queue = new Queue();
-    const result = [];
-    
-    queue.enqueue("1");
-    
-    for (let i = 0; i < n; i++) {
-        const binary = queue.dequeue();
-        result.push(binary);
-        
-        queue.enqueue(binary + "0");
-        queue.enqueue(binary + "1");
-    }
-    
-    return result;
-}
-```
+### 2. First Non-Repeating Character in Stream ⭐⭐⭐⭐⭐
+**Problem**: Find first non-repeating character in a stream of characters.
 
-### 6.5 First Non-Repeating Character in Stream
+**Solution**:
 ```js
 function firstNonRepeating(stream) {
-    const queue = new Queue();
+    const queue = [];
     const charCount = {};
     const result = [];
     
     for (let char of stream) {
         charCount[char] = (charCount[char] || 0) + 1;
-        queue.enqueue(char);
+        queue.push(char);
         
         // Remove characters that are no longer non-repeating
-        while (!queue.isEmpty() && charCount[queue.front()] > 1) {
-            queue.dequeue();
+        while (queue.length > 0 && charCount[queue[0]] > 1) {
+            queue.shift();
         }
         
-        result.push(queue.isEmpty() ? '#' : queue.front());
+        result.push(queue.length === 0 ? '#' : queue[0]);
     }
     
     return result;
 }
 ```
 
-### 6.6 Implement Stack using Queues
+### 3. Rotting Oranges ⭐⭐⭐⭐⭐
+**Problem**: Find minimum time to rot all oranges using BFS.
+
+**Solution**:
 ```js
-class StackUsingQueues {
-    constructor() {
-        this.q1 = new Queue();
-        this.q2 = new Queue();
+function orangesRotting(grid) {
+    const m = grid.length, n = grid[0].length;
+    const queue = [];
+    let freshCount = 0;
+    
+    // Find all rotten oranges and count fresh ones
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (grid[i][j] === 2) {
+                queue.push([i, j]);
+            } else if (grid[i][j] === 1) {
+                freshCount++;
+            }
+        }
     }
     
-    push(element) {
-        this.q2.enqueue(element);
+    if (freshCount === 0) return 0;
+    
+    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+    let minutes = 0;
+    
+    while (queue.length > 0) {
+        const size = queue.length;
         
-        while (!this.q1.isEmpty()) {
-            this.q2.enqueue(this.q1.dequeue());
+        for (let i = 0; i < size; i++) {
+            const [row, col] = queue.shift();
+            
+            for (const [dr, dc] of directions) {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                
+                if (newRow >= 0 && newRow < m && newCol >= 0 && newCol < n && 
+                    grid[newRow][newCol] === 1) {
+                    grid[newRow][newCol] = 2;
+                    queue.push([newRow, newCol]);
+                    freshCount--;
+                }
+            }
         }
         
-        [this.q1, this.q2] = [this.q2, this.q1];
+        if (queue.length > 0) minutes++;
     }
     
-    pop() {
-        return this.q1.dequeue();
+    return freshCount === 0 ? minutes : -1;
+}
+```
+
+### 4. Design Hit Counter ⭐⭐⭐⭐
+**Problem**: Design a hit counter which counts hits in the past 5 minutes.
+
+**Solution**:
+```js
+class HitCounter {
+    constructor() {
+        this.queue = [];
     }
     
-    top() {
-        return this.q1.front();
+    hit(timestamp) {
+        this.queue.push(timestamp);
     }
     
-    empty() {
-        return this.q1.isEmpty();
+    getHits(timestamp) {
+        // Remove hits older than 5 minutes (300 seconds)
+        while (this.queue.length > 0 && this.queue[0] <= timestamp - 300) {
+            this.queue.shift();
+        }
+        
+        return this.queue.length;
     }
 }
 ```
 
-## 7. JavaScript Built-in Methods
+### 5. Circular Array Loop ⭐⭐⭐⭐
+**Problem**: Detect if there exists a loop in a circular array.
 
-### Array as Queue (Less Efficient)
+**Solution**:
 ```js
-const queue = [];
+function circularArrayLoop(nums) {
+    const n = nums.length;
+    
+    for (let i = 0; i < n; i++) {
+        if (nums[i] === 0) continue;
+        
+        let slow = i, fast = i;
+        const positive = nums[i] > 0;
+        
+        do {
+            slow = nextIndex(nums, slow, positive);
+            fast = nextIndex(nums, fast, positive);
+            if (fast !== -1) {
+                fast = nextIndex(nums, fast, positive);
+            }
+        } while (slow !== -1 && fast !== -1 && slow !== fast);
+        
+        if (slow !== -1 && slow === fast) {
+            return true;
+        }
+    }
+    
+    return false;
+}
 
-// Enqueue
-queue.push(element);
-
-// Dequeue
-const element = queue.shift(); // O(n) operation
-
-// Front
-const front = queue[0];
-
-// Size
-const size = queue.length;
-
-// Empty check
-const isEmpty = queue.length === 0;
+function nextIndex(nums, index, positive) {
+    const direction = nums[index] > 0;
+    if (direction !== positive) return -1;
+    
+    const nextIdx = (index + nums[index]) % nums.length;
+    if (nextIdx < 0) nextIdx += nums.length;
+    
+    return nextIdx === index ? -1 : nextIdx;
+}
 ```
 
-### Using Array as Deque
+## 🔴 Hard Level Questions
+
+### 1. Shortest Path in Binary Matrix ⭐⭐⭐⭐⭐
+**Problem**: Find shortest path from top-left to bottom-right in binary matrix.
+
+**Solution**:
 ```js
-const deque = [];
-
-// Add to front/rear
-deque.unshift(element); // Add to front
-deque.push(element);    // Add to rear
-
-// Remove from front/rear
-const front = deque.shift(); // Remove from front
-const rear = deque.pop();    // Remove from rear
+function shortestPathBinaryMatrix(grid) {
+    const n = grid.length;
+    if (grid[0][0] === 1 || grid[n-1][n-1] === 1) return -1;
+    
+    const queue = [[0, 0, 1]]; // [row, col, distance]
+    const visited = Array(n).fill().map(() => Array(n).fill(false));
+    visited[0][0] = true;
+    
+    const directions = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1],           [0, 1],
+        [1, -1],  [1, 0],  [1, 1]
+    ];
+    
+    while (queue.length > 0) {
+        const [row, col, dist] = queue.shift();
+        
+        if (row === n - 1 && col === n - 1) {
+            return dist;
+        }
+        
+        for (const [dr, dc] of directions) {
+            const newRow = row + dr;
+            const newCol = col + dc;
+            
+            if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < n && 
+                grid[newRow][newCol] === 0 && !visited[newRow][newCol]) {
+                visited[newRow][newCol] = true;
+                queue.push([newRow, newCol, dist + 1]);
+            }
+        }
+    }
+    
+    return -1;
+}
 ```
 
-## 8. Applications & Use Cases
+### 2. Sliding Window Median ⭐⭐⭐⭐⭐
+**Problem**: Find median of all sliding windows of size k.
+
+**Solution**:
+```js
+function medianSlidingWindow(nums, k) {
+    const result = [];
+    
+    for (let i = 0; i <= nums.length - k; i++) {
+        const window = nums.slice(i, i + k).sort((a, b) => a - b);
+        const median = k % 2 === 1 ? 
+            window[Math.floor(k / 2)] : 
+            (window[k / 2 - 1] + window[k / 2]) / 2;
+        result.push(median);
+    }
+    
+    return result;
+}
+```
+
+### 3. Shortest Subarray with Sum at Least K ⭐⭐⭐⭐⭐
+**Problem**: Find shortest subarray with sum at least K using deque.
+
+**Solution**:
+```js
+function shortestSubarray(nums, k) {
+    const n = nums.length;
+    const prefixSum = new Array(n + 1).fill(0);
+    
+    for (let i = 0; i < n; i++) {
+        prefixSum[i + 1] = prefixSum[i] + nums[i];
+    }
+    
+    const deque = [];
+    let result = n + 1;
+    
+    for (let i = 0; i <= n; i++) {
+        while (deque.length > 0 && prefixSum[i] - prefixSum[deque[0]] >= k) {
+            result = Math.min(result, i - deque.shift());
+        }
+        
+        while (deque.length > 0 && prefixSum[i] <= prefixSum[deque[deque.length - 1]]) {
+            deque.pop();
+        }
+        
+        deque.push(i);
+    }
+    
+    return result === n + 1 ? -1 : result;
+}
+```
+
+### 4. Constrained Subsequence Sum ⭐⭐⭐⭐⭐
+**Problem**: Find maximum sum of non-empty subsequence with constraint.
+
+**Solution**:
+```js
+function constrainedSubsetSum(nums, k) {
+    const n = nums.length;
+    const dp = new Array(n);
+    const deque = [];
+    
+    for (let i = 0; i < n; i++) {
+        // Remove elements outside window
+        while (deque.length > 0 && deque[0] < i - k) {
+            deque.shift();
+        }
+        
+        dp[i] = nums[i] + (deque.length > 0 ? Math.max(0, dp[deque[0]]) : 0);
+        
+        // Maintain decreasing order in deque
+        while (deque.length > 0 && dp[deque[deque.length - 1]] <= dp[i]) {
+            deque.pop();
+        }
+        
+        deque.push(i);
+    }
+    
+    return Math.max(...dp);
+}
+```
+
+### 5. Find Median from Data Stream ⭐⭐⭐⭐⭐
+**Problem**: Design data structure to find median from stream efficiently.
+
+**Solution**:
+```js
+class MedianFinder {
+    constructor() {
+        this.small = []; // max heap (simulated with array)
+        this.large = []; // min heap (simulated with array)
+    }
+    
+    addNum(num) {
+        if (this.small.length === 0 || num <= this.small[0]) {
+            this.small.push(num);
+            this.small.sort((a, b) => b - a); // max heap
+        } else {
+            this.large.push(num);
+            this.large.sort((a, b) => a - b); // min heap
+        }
+        
+        // Balance heaps
+        if (this.small.length > this.large.length + 1) {
+            this.large.push(this.small.shift());
+            this.large.sort((a, b) => a - b);
+        } else if (this.large.length > this.small.length + 1) {
+            this.small.push(this.large.shift());
+            this.small.sort((a, b) => b - a);
+        }
+    }
+    
+    findMedian() {
+        if (this.small.length === this.large.length) {
+            return (this.small[0] + this.large[0]) / 2;
+        }
+        return this.small.length > this.large.length ? this.small[0] : this.large[0];
+    }
+}
+```
+
+---
+
+## Applications & Use Cases
 
 ### Queue Applications
 - **Process Scheduling**: CPU scheduling, job queues
@@ -517,20 +810,7 @@ const rear = deque.pop();    // Remove from rear
 - **Task Scheduling**: Priority-based scheduling
 - **Merge K Sorted Lists**: Efficient merging
 
-## 9. Common Interview Questions
-
-1. **Implement queue using stacks**
-2. **Implement stack using queues**
-3. **Design circular queue**
-4. **Find first non-repeating character**
-5. **Sliding window maximum**
-6. **Level order traversal**
-7. **Generate binary numbers**
-8. **Implement LRU cache using deque**
-9. **Shortest path in binary matrix**
-10. **Design hit counter**
-
-## 10. Tips & Best Practices
+## Tips & Best Practices
 
 ### Performance Tips
 - Use object-based implementation for better performance
@@ -554,7 +834,7 @@ if (queue.isEmpty()) {
 const element = queue.dequeue() || defaultValue;
 ```
 
-## 11. Complexity Summary
+## Complexity Summary
 
 | Implementation | Enqueue | Dequeue | Space |
 |----------------|---------|---------|-------|
@@ -564,3 +844,12 @@ const element = queue.dequeue() || defaultValue;
 | Linked List | O(1) | O(1) | O(n) |
 
 **Note**: k = capacity for circular queue, n = number of elements
+
+## 🎯 Interview Success Tips
+
+1. **Always clarify requirements** - Ask about constraints, edge cases
+2. **Start with brute force** - Then optimize with queue/deque
+3. **Explain time/space complexity** - Justify your choice of data structure
+4. **Handle edge cases** - Empty queues, single elements, null inputs
+5. **Code cleanly** - Use meaningful variable names and comments
+6. **Test with examples** - Walk through your solution step by step
