@@ -753,33 +753,35 @@ function firstMissingPositive(nums) {
 **Problem**: Find median of two sorted arrays in O(log(m+n))
 ```js
 function findMedianSortedArrays(nums1, nums2) {
+    // Ensure nums1 is the shorter array
     if (nums1.length > nums2.length) {
         [nums1, nums2] = [nums2, nums1];
     }
-    
-    const m = nums1.length, n = nums2.length;
-    let left = 0, right = m;
-    
-    while (left <= right) {
-        const partitionX = Math.floor((left + right) / 2);
-        const partitionY = Math.floor((m + n + 1) / 2) - partitionX;
-        
-        const maxLeftX = partitionX === 0 ? -Infinity : nums1[partitionX - 1];
-        const maxLeftY = partitionY === 0 ? -Infinity : nums2[partitionY - 1];
-        
-        const minRightX = partitionX === m ? Infinity : nums1[partitionX];
-        const minRightY = partitionY === n ? Infinity : nums2[partitionY];
-        
-        if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+
+    const m = nums1.length;
+    const n = nums2.length;
+    let low = 0, high = m;
+
+    while (low <= high) {
+        const i = Math.floor((low + high) / 2);
+        const j = Math.floor((m + n + 1) / 2) - i;
+
+        const maxLeftA = (i === 0) ? -Infinity : nums1[i - 1];
+        const minRightA = (i === m) ? Infinity : nums1[i];
+
+        const maxLeftB = (j === 0) ? -Infinity : nums2[j - 1];
+        const minRightB = (j === n) ? Infinity : nums2[j];
+
+        if (maxLeftA <= minRightB && maxLeftB <= minRightA) {
             if ((m + n) % 2 === 0) {
-                return (Math.max(maxLeftX, maxLeftY) + Math.min(minRightX, minRightY)) / 2;
+                return (Math.max(maxLeftA, maxLeftB) + Math.min(minRightA, minRightB)) / 2;
             } else {
-                return Math.max(maxLeftX, maxLeftY);
+                return Math.max(maxLeftA, maxLeftB);
             }
-        } else if (maxLeftX > minRightY) {
-            right = partitionX - 1;
+        } else if (maxLeftA > minRightB) {
+            high = i - 1;
         } else {
-            left = partitionX + 1;
+            low = i + 1;
         }
     }
 }
