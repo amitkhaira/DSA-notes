@@ -1062,10 +1062,690 @@ function maxProduct(nums) {
 
 # Hard Level Questions
 
-## 1. Edit Distance ⭐⭐⭐⭐⭐
-**Problem**: Minimum operations to convert word1 to word2.
-**Companies**: Google, Microsoft, Amazon, Facebook, Apple
+### 1. Regular Expression Matching ⭐⭐⭐⭐⭐
+**Problem**: Given an input string `s` and a pattern `p`, implement regular expression matching with support for `.` and `*`.
+
+**Company**: Google, Facebook, Microsoft, Amazon
+
+```javascript
+function isMatch(s, p) {
+    const m = s.length, n = p.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(false));
+    
+    dp[0][0] = true;
+    
+    // Handle patterns like a*, a*b*, a*b*c*
+    for (let j = 1; j <= n; j++) {
+        if (p[j - 1] === '*') {
+            dp[0][j] = dp[0][j - 2];
+        }
+    }
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (p[j - 1] === '*') {
+                dp[i][j] = dp[i][j - 2]; // Zero occurrences
+                if (matches(s, p, i, j - 1)) {
+                    dp[i][j] = dp[i][j] || dp[i - 1][j]; // One or more occurrences
+                }
+            } else if (matches(s, p, i, j)) {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+        }
+    }
+    
+    return dp[m][n];
+}
+
+function matches(s, p, i, j) {
+    return p[j - 1] === '.' || s[i - 1] === p[j - 1];
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 2. Wildcard Matching ⭐⭐⭐⭐⭐
+**Problem**: Given an input string `s` and a pattern `p`, implement wildcard pattern matching with support for `?` and `*`.
+
+**Company**: Google, Facebook, Microsoft
+
+```javascript
+function isMatch(s, p) {
+    const m = s.length, n = p.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(false));
+    
+    dp[0][0] = true;
+    
+    // Handle leading * in pattern
+    for (let j = 1; j <= n; j++) {
+        if (p[j - 1] === '*') {
+            dp[0][j] = dp[0][j - 1];
+        }
+    }
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (p[j - 1] === '*') {
+                dp[i][j] = dp[i - 1][j] || dp[i][j - 1] || dp[i - 1][j - 1];
+            } else if (p[j - 1] === '?' || s[i - 1] === p[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+        }
+    }
+    
+    return dp[m][n];
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 3. Burst Balloons ⭐⭐⭐⭐⭐
+**Problem**: Given n balloons, each with a number, burst all balloons to get maximum coins. When you burst balloon i, you get `nums[left] * nums[i] * nums[right]` coins.
+
+**Company**: Google, Amazon, Facebook
+
+```javascript
+function maxCoins(nums) {
+    const arr = [1, ...nums, 1];
+    const n = arr.length;
+    const dp = Array(n).fill().map(() => Array(n).fill(0));
+    
+    for (let len = 3; len <= n; len++) {
+        for (let i = 0; i <= n - len; i++) {
+            const j = i + len - 1;
+            for (let k = i + 1; k < j; k++) {
+                dp[i][j] = Math.max(dp[i][j], 
+                    dp[i][k] + dp[k][j] + arr[i] * arr[k] * arr[j]);
+            }
+        }
+    }
+    
+    return dp[0][n - 1];
+}
+```
+
+**Time**: O(n³) | **Space**: O(n²)
+
+---
+
+### 4. Edit Distance ⭐⭐⭐⭐⭐
+**Problem**: Given two strings, find the minimum number of operations (insert, delete, replace) to convert one string to another.
+
+**Company**: Google, Microsoft, Amazon, Facebook
 
 ```javascript
 function minDistance(word1, word2) {
     const m = word1.length, n = word2.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+    
+    // Base cases
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (word1[i - 1] === word2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = 1 + Math.min(
+                    dp[i - 1][j],     // Delete
+                    dp[i][j - 1],     // Insert
+                    dp[i - 1][j - 1]  // Replace
+                );
+            }
+        }
+    }
+    
+    return dp[m][n];
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 5. Longest Valid Parentheses ⭐⭐⭐⭐⭐
+**Problem**: Given a string containing just parentheses, find the length of the longest valid parentheses substring.
+
+**Company**: Google, Microsoft, Amazon
+
+```javascript
+function longestValidParentheses(s) {
+    const n = s.length;
+    const dp = new Array(n).fill(0);
+    let maxLen = 0;
+    
+    for (let i = 1; i < n; i++) {
+        if (s[i] === ')') {
+            if (s[i - 1] === '(') {
+                dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+            } else if (dp[i - 1] > 0) {
+                const match = i - dp[i - 1] - 1;
+                if (match >= 0 && s[match] === '(') {
+                    dp[i] = dp[i - 1] + 2 + (match > 0 ? dp[match - 1] : 0);
+                }
+            }
+        }
+        maxLen = Math.max(maxLen, dp[i]);
+    }
+    
+    return maxLen;
+}
+```
+
+**Time**: O(n) | **Space**: O(n)
+
+---
+
+### 6. Interleaving String ⭐⭐⭐⭐⭐
+**Problem**: Given strings s1, s2, and s3, find whether s3 is formed by interleaving s1 and s2.
+
+**Company**: Google, Microsoft, Amazon
+
+```javascript
+function isInterleave(s1, s2, s3) {
+    if (s1.length + s2.length !== s3.length) return false;
+    
+    const m = s1.length, n = s2.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(false));
+    
+    dp[0][0] = true;
+    
+    // Fill first row
+    for (let j = 1; j <= n; j++) {
+        dp[0][j] = dp[0][j - 1] && s2[j - 1] === s3[j - 1];
+    }
+    
+    // Fill first column
+    for (let i = 1; i <= m; i++) {
+        dp[i][0] = dp[i - 1][0] && s1[i - 1] === s3[i - 1];
+    }
+    
+    // Fill rest of the table
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            dp[i][j] = (dp[i - 1][j] && s1[i - 1] === s3[i + j - 1]) ||
+                      (dp[i][j - 1] && s2[j - 1] === s3[i + j - 1]);
+        }
+    }
+    
+    return dp[m][n];
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 7. Distinct Subsequences ⭐⭐⭐⭐⭐
+**Problem**: Given two strings s and t, return the number of distinct subsequences of s which equals t.
+
+**Company**: Google, Microsoft, Amazon
+
+```javascript
+function numDistinct(s, t) {
+    const m = s.length, n = t.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+    
+    // Base case: empty string t can be formed in 1 way
+    for (let i = 0; i <= m; i++) {
+        dp[i][0] = 1;
+    }
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (s[i - 1] === t[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+    
+    return dp[m][n];
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 8. Best Time to Buy and Sell Stock IV ⭐⭐⭐⭐⭐
+**Problem**: You may complete at most k transactions. Find the maximum profit.
+
+**Company**: Google, Facebook, Microsoft, Amazon
+
+```javascript
+function maxProfit(k, prices) {
+    const n = prices.length;
+    if (n <= 1 || k === 0) return 0;
+    
+    // If k is large enough, it's like unlimited transactions
+    if (k >= n / 2) {
+        let profit = 0;
+        for (let i = 1; i < n; i++) {
+            if (prices[i] > prices[i - 1]) {
+                profit += prices[i] - prices[i - 1];
+            }
+        }
+        return profit;
+    }
+    
+    // buy[i][j] = max profit after at most i transactions, currently holding stock
+    // sell[i][j] = max profit after at most i transactions, not holding stock
+    const buy = Array(k + 1).fill().map(() => Array(n).fill(0));
+    const sell = Array(k + 1).fill().map(() => Array(n).fill(0));
+    
+    for (let i = 1; i <= k; i++) {
+        buy[i][0] = -prices[0];
+        for (let j = 1; j < n; j++) {
+            buy[i][j] = Math.max(buy[i][j - 1], sell[i - 1][j - 1] - prices[j]);
+            sell[i][j] = Math.max(sell[i][j - 1], buy[i][j - 1] + prices[j]);
+        }
+    }
+    
+    return sell[k][n - 1];
+}
+```
+
+**Time**: O(k×n) | **Space**: O(k×n)
+
+---
+
+### 9. Palindrome Partitioning II ⭐⭐⭐⭐⭐
+**Problem**: Given a string s, partition s such that every substring is a palindrome. Return minimum cuts needed.
+
+**Company**: Google, Microsoft, Amazon
+
+```javascript
+function minCut(s) {
+    const n = s.length;
+    const dp = new Array(n).fill(0).map((_, i) => i); // worst case: all single chars
+    const isPalindrome = Array(n).fill().map(() => Array(n).fill(false));
+    
+    // Build palindrome table
+    for (let i = 0; i < n; i++) {
+        isPalindrome[i][i] = true;
+    }
+    
+    for (let len = 2; len <= n; len++) {
+        for (let i = 0; i <= n - len; i++) {
+            const j = i + len - 1;
+            if (s[i] === s[j]) {
+                isPalindrome[i][j] = len === 2 || isPalindrome[i + 1][j - 1];
+            }
+        }
+    }
+    
+    // DP for minimum cuts
+    for (let i = 0; i < n; i++) {
+        if (isPalindrome[0][i]) {
+            dp[i] = 0;
+        } else {
+            for (let j = 0; j < i; j++) {
+                if (isPalindrome[j + 1][i]) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+    }
+    
+    return dp[n - 1];
+}
+```
+
+**Time**: O(n²) | **Space**: O(n²)
+
+---
+
+### 10. Scramble String ⭐⭐⭐⭐⭐
+**Problem**: Given two strings s1 and s2, return true if s2 is a scrambled string of s1.
+
+**Company**: Google, Microsoft
+
+```javascript
+function isScramble(s1, s2) {
+    if (s1.length !== s2.length) return false;
+    if (s1 === s2) return true;
+    
+    const n = s1.length;
+    const dp = Array(n).fill().map(() => 
+        Array(n).fill().map(() => 
+            Array(n + 1).fill(false)
+        )
+    );
+    
+    // Base case: length 1
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            dp[i][j][1] = s1[i] === s2[j];
+        }
+    }
+    
+    // Fill for increasing lengths
+    for (let len = 2; len <= n; len++) {
+        for (let i = 0; i <= n - len; i++) {
+            for (let j = 0; j <= n - len; j++) {
+                for (let k = 1; k < len; k++) {
+                    // No swap case
+                    if (dp[i][j][k] && dp[i + k][j + k][len - k]) {
+                        dp[i][j][len] = true;
+                        break;
+                    }
+                    // Swap case
+                    if (dp[i][j + len - k][k] && dp[i + k][j][len - k]) {
+                        dp[i][j][len] = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    return dp[0][0][n];
+}
+```
+
+**Time**: O(n⁴) | **Space**: O(n³)
+
+---
+
+### 11. Cherry Pickup ⭐⭐⭐⭐⭐
+**Problem**: Given an n×n grid with cherries, collect maximum cherries by going from (0,0) to (n-1,n-1) and back.
+
+**Company**: Google, Amazon
+
+```javascript
+function cherryPickup(grid) {
+    const n = grid.length;
+    const dp = Array(n).fill().map(() => 
+        Array(n).fill().map(() => 
+            Array(n).fill(-1)
+        )
+    );
+    
+    function solve(r1, c1, r2) {
+        const c2 = r1 + c1 - r2;
+        
+        // Out of bounds or thorns
+        if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || 
+            grid[r1][c1] === -1 || grid[r2][c2] === -1) {
+            return -Infinity;
+        }
+        
+        // Reached destination
+        if (r1 === n - 1 && c1 === n - 1) {
+            return grid[r1][c1];
+        }
+        
+        // Already computed
+        if (dp[r1][c1][r2] !== -1) {
+            return dp[r1][c1][r2];
+        }
+        
+        // Collect cherries
+        let result = grid[r1][c1];
+        if (r1 !== r2) result += grid[r2][c2];
+        
+        // Try all possible moves
+        const moves = [
+            solve(r1 + 1, c1, r2 + 1),     // Both down
+            solve(r1 + 1, c1, r2),         // Person1 down, Person2 right
+            solve(r1, c1 + 1, r2 + 1),     // Person1 right, Person2 down
+            solve(r1, c1 + 1, r2)          // Both right
+        ];
+        
+        result += Math.max(...moves);
+        dp[r1][c1][r2] = result;
+        return result;
+    }
+    
+    return Math.max(0, solve(0, 0, 0));
+}
+```
+
+**Time**: O(n³) | **Space**: O(n³)
+
+---
+
+### 12. Minimum Window Subsequence ⭐⭐⭐⭐⭐
+**Problem**: Given strings S and T, find the minimum window in S which contains T as a subsequence.
+
+**Company**: Google, Microsoft
+
+```javascript
+function minWindow(s, t) {
+    const m = s.length, n = t.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+    
+    // Base case: empty t can be matched by any prefix of s
+    for (let i = 0; i <= m; i++) {
+        dp[i][0] = i;
+    }
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (s[i - 1] === t[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+    
+    let start = 0, len = Infinity;
+    
+    // Find minimum window ending at each position
+    for (let i = n; i <= m; i++) {
+        if (dp[i][n] !== 0) {
+            if (i - dp[i][n] + 1 < len) {
+                start = dp[i][n] - 1;
+                len = i - dp[i][n] + 1;
+            }
+        }
+    }
+    
+    return len === Infinity ? "" : s.substring(start, start + len);
+}
+```
+
+**Time**: O(m×n) | **Space**: O(m×n)
+
+---
+
+### 13. Count Different Palindromic Subsequences ⭐⭐⭐⭐⭐
+**Problem**: Given a string S, find the number of different non-empty palindromic subsequences.
+
+**Company**: Google, Microsoft
+
+```javascript
+function countPalindromicSubsequences(s) {
+    const MOD = 1e9 + 7;
+    const n = s.length;
+    const dp = Array(n).fill().map(() => Array(n).fill(0));
+    
+    // Single character palindromes
+    for (let i = 0; i < n; i++) {
+        dp[i][i] = 1;
+    }
+    
+    // Length 2 palindromes
+    for (let i = 0; i < n - 1; i++) {
+        dp[i][i + 1] = s[i] === s[i + 1] ? 1 : 2;
+    }
+    
+    // Length 3 and more
+    for (let len = 3; len <= n; len++) {
+        for (let i = 0; i <= n - len; i++) {
+            const j = i + len - 1;
+            
+            if (s[i] === s[j]) {
+                // Find next and previous occurrence
+                let low = i + 1, high = j - 1;
+                while (low <= high && s[low] !== s[i]) low++;
+                while (low <= high && s[high] !== s[i]) high--;
+                
+                if (low > high) {
+                    // No same character in between
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 + 2) % MOD;
+                } else if (low === high) {
+                    // One same character in between
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 + 1) % MOD;
+                } else {
+                    // Two or more same characters in between
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 - dp[low + 1][high - 1] + MOD) % MOD;
+                }
+            } else {
+                dp[i][j] = (dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1] + MOD) % MOD;
+            }
+        }
+    }
+    
+    return dp[0][n - 1];
+}
+```
+
+**Time**: O(n³) | **Space**: O(n²)
+
+---
+
+### 14. Shortest Palindrome ⭐⭐⭐⭐⭐
+**Problem**: Given a string s, add characters in front of it to make it a palindrome. Find the shortest palindrome.
+
+**Company**: Google, Microsoft
+
+```javascript
+function shortestPalindrome(s) {
+    const n = s.length;
+    if (n === 0) return "";
+    
+    // Find the longest palindromic prefix
+    let end = 0;
+    for (let i = n - 1; i >= 0; i--) {
+        if (s[i] === s[end]) {
+            end++;
+        }
+    }
+    
+    // If entire string is palindrome
+    if (end === n) return s;
+    
+    // Recursively find palindrome for suffix
+    const suffix = s.substring(end);
+    const prefix = suffix.split('').reverse().join('');
+    
+    return prefix + shortestPalindrome(s.substring(0, end)) + suffix;
+}
+
+// Alternative KMP approach
+function shortestPalindromeKMP(s) {
+    const combined = s + "#" + s.split('').reverse().join('');
+    const lps = computeLPS(combined);
+    
+    return s.split('').reverse().join('').substring(0, s.length - lps[lps.length - 1]) + s;
+}
+
+function computeLPS(s) {
+    const n = s.length;
+    const lps = new Array(n).fill(0);
+    let len = 0;
+    
+    for (let i = 1; i < n; i++) {
+        while (len > 0 && s[i] !== s[len]) {
+            len = lps[len - 1];
+        }
+        if (s[i] === s[len]) {
+            len++;
+        }
+        lps[i] = len;
+    }
+    
+    return lps;
+}
+```
+
+**Time**: O(n) | **Space**: O(n)
+
+---
+
+### 15. Number of Digit One ⭐⭐⭐⭐⭐
+**Problem**: Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
+
+**Company**: Google, Microsoft
+
+```javascript
+function countDigitOne(n) {
+    let count = 0;
+    let factor = 1;
+    
+    while (factor <= n) {
+        const lower = Math.floor(n / (factor * 10)) * factor;
+        const cur = Math.floor(n / factor) % 10;
+        const higher = Math.floor(n / (factor * 10));
+        
+        if (cur === 0) {
+            count += higher * factor;
+        } else if (cur === 1) {
+            count += higher * factor + (n % factor) + 1;
+        } else {
+            count += (higher + 1) * factor;
+        }
+        
+        factor *= 10;
+    }
+    
+    return count;
+}
+```
+
+**Time**: O(log n) | **Space**: O(1)
+
+---
+
+## Interview Tips for Hard DP Problems
+
+### 1. **Pattern Recognition**
+- **Interval DP**: When you need to consider all possible splits
+- **3D DP**: When you have two sequences/paths to consider
+- **State Machine**: When you have multiple states at each step
+- **String Matching**: Often involves 2D DP with character matching
+
+### 2. **Common Hard DP Patterns**
+```javascript
+// Interval DP Pattern
+for (let len = 2; len <= n; len++) {
+    for (let i = 0; i <= n - len; i++) {
+        const j = i + len - 1;
+        for (let k = i; k < j; k++) {
+            // Try all possible splits
+        }
+    }
+}
+
+// 3D DP Pattern (Two sequences)
+for (let i = 0; i <= m; i++) {
+    for (let j = 0; j <= n; j++) {
+        for (let k = 0; k <= p; k++) {
+            // Consider all three dimensions
+        }
+    }
+}
+```
+
+### 3. **Optimization Strategies**
+- **Memoization**: Start with recursive solution, add memoization
+- **Bottom-up**: Convert to iterative for better performance
+- **Space optimization**: Use rolling arrays when possible
+- **Early termination**: Add pruning conditions
+
+### 4. **Debugging Hard DP**
+- **Small examples**: Test with strings of length 2-3
+- **Edge cases**: Empty strings, single characters
+- **State verification**: Print DP table to verify transitions
+- **Recurrence check**: Manually verify first few states
+
+---
