@@ -15,6 +15,7 @@ str.replaceAll(old, new)     // Replace all occurrences
 str.toLowerCase()            // Convert to lowercase
 str.toUpperCase()            // Convert to uppercase
 str.trim()                   // Remove whitespace
+str.repeat(count)            // Repeat a string multiple times
 ```
 
 ## Most Frequently Asked String Interview Questions
