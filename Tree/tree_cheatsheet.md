@@ -301,9 +301,8 @@ function pathSum(root, targetSum) {
 ```javascript
 function isSubtree(root, subRoot) {
     if (!root) return false;
-    return isSameTree(root, subRoot) || 
-           isSubtree(root.left, subRoot) || 
-           isSubtree(root.right, subRoot);
+    if (isSameTree(root, subRoot)) return true;
+    return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
 }
 ```
 
